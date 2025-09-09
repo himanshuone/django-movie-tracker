@@ -86,6 +86,19 @@ def add_movie(request):
         form = MovieForm(request.POST, request.FILES)
         if form.is_valid():
             movie = form.save()
+            
+            # Try to fetch poster from TMDB if no poster provided
+            if not movie.poster_url and not movie.poster_image:
+                try:
+                    from .tmdb_service import tmdb_service
+                    tmdb_poster = tmdb_service.find_movie_poster(movie.name, movie.year)
+                    if tmdb_poster:
+                        movie.poster_url = tmdb_poster
+                        movie.save(update_fields=['poster_url'])
+                        messages.info(request, f'✨ Auto-fetched poster from TMDB!')
+                except Exception:
+                    pass  # Silently fail if TMDB fetch fails
+            
             messages.success(request, f'Movie "{movie.name}" added successfully!')
             return redirect('movie_list')
     else:
@@ -183,15 +196,17 @@ def upload_csv(request):
                         # Create the movie
                         movie = Movie.objects.create(**movie_data)
                         
-                        # Try to fetch poster from TMDB if no poster provided
-                        if not poster_url:
+                        # Try to fetch poster from TMDB if no poster provided or if it's a placeholder
+                        if not poster_url or poster_url in ['https://image.url', 'image.url', 'placeholder']:
                             try:
                                 from .tmdb_service import tmdb_service
                                 tmdb_poster = tmdb_service.find_movie_poster(name, int(year))
                                 if tmdb_poster:
                                     movie.poster_url = tmdb_poster
                                     movie.save(update_fields=['poster_url'])
-                            except Exception:
+                                    print(f'✓ Auto-fetched poster for {name}: {tmdb_poster}')
+                            except Exception as e:
+                                print(f'✗ Failed to fetch poster for {name}: {e}')
                                 pass  # Silently fail if TMDB fetch fails
                         added_count += 1
                         

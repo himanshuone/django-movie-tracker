@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}All Movies - Movie Tracker{% endblock %}
+{% block title %}All Movies - iseethrough{% endblock %}
 
 {% block content %}
 <!-- Header Section -->
@@ -162,7 +162,7 @@
                 <a href="{% url 'movie_detail' movie.id %}" class="bg-gray-600 hover:bg-gray-700 text-white text-center py-2 px-2 rounded-lg text-xs font-medium transition-colors duration-200">
                     Details
                 </a>
-                <a href="{% url 'edit_movie' movie.id %}" class="bg-teal-500 hover:bg-teal-600 text-white text-center py-2 px-2 rounded-lg text-xs font-medium transition-colors duration-200">
+                <a href="{% url 'edit_movie' movie.id %}" class="bg-gray-800 hover:bg-gray-900 text-white text-center py-2 px-2 rounded-lg text-xs font-medium transition-colors duration-200">
                     Edit
                 </a>
             </div>
@@ -184,7 +184,7 @@
     <div class="flex space-x-1">
         {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
-                <span class="px-4 py-2 text-sm font-medium text-white bg-teal-500 border border-teal-500 rounded-lg">
+                <span class="px-4 py-2 text-sm font-medium text-white bg-gray-800 border border-gray-800 rounded-lg">
                     {{ num }}
                 </span>
             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}

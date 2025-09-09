@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Movie - Movie Tracker{% endblock %}
+{% block title %}Add Movie - iseethrough{% endblock %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto">
@@ -85,14 +85,14 @@
             </div>
 
             <!-- Watch Again Checkbox -->
-            <div class="flex items-center space-x-3 p-4 bg-teal-50 rounded-lg border border-teal-200">
+            <div class="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <div class="flex items-center">
                     {{ form.watch_again }}
-                    <label for="{{ form.watch_again.id_for_label }}" class="ml-2 text-sm font-medium text-teal-800">
+                    <label for="{{ form.watch_again.id_for_label }}" class="ml-2 text-sm font-medium text-gray-800">
                         Would Watch Again
                     </label>
                 </div>
-                <div class="text-sm text-teal-600">
+                <div class="text-sm text-gray-600">
                     ✓ Tick if this movie is worth watching again
                 </div>
             </div>
@@ -149,11 +149,11 @@
 <style>
 /* Override form styles to use Tailwind */
 .form-control {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors duration-200;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors duration-200;
 }
 
 .form-check-input {
-    @apply w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2;
+    @apply w-4 h-4 text-gray-600 bg-gray-100 border-gray-300 rounded focus:ring-gray-500 focus:ring-2;
 }
 
 textarea.form-control {

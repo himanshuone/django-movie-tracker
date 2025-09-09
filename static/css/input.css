@@ -8,16 +8,6 @@
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
-    font-stretch: 110%;
-  }
-  
-  body {
-    @apply bg-gray-50 text-gray-900;
-  }
-  
-  h1, h2, h3 {
-    font-stretch: 120%;
-    letter-spacing: -0.025em;
   }
 }
 
@@ -42,12 +32,12 @@
   }
   
   .nav-link-active {
-    @apply text-white bg-teal-700;
+    @apply text-white bg-orange-700;
   }
   
   /* Button Styles */
   .btn-primary {
-    @apply bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+    @apply bg-gray-800 hover:bg-gray-900 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
   }
   
   .btn-secondary {
@@ -59,16 +49,16 @@
   }
   
   .btn-outline {
-    @apply border-2 border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+    @apply border-2 border-gray-500 text-gray-500 hover:bg-gray-500 hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
   }
   
   /* Form Styles */
   .form-input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors duration-200;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors duration-200;
   }
   
   .form-select {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white transition-colors duration-200;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 bg-white transition-colors duration-200;
   }
   
   /* Search Form */
@@ -82,7 +72,7 @@
   }
   
   .stats-number {
-    @apply text-4xl font-bold text-teal-500 mb-2;
+    @apply text-4xl font-bold text-gray-900 mb-2;
   }
   
   .stats-label {
@@ -91,7 +81,7 @@
   
   /* Rating Badge */
   .rating-badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-teal-100 text-teal-800;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800;
   }
   
   /* Movie Info */

@@ -14,16 +14,16 @@
 @layer components {
   /* Movie Card Component */
   .movie-card {
-    @apply bg-white rounded-lg shadow-movie-card hover:shadow-movie-card-hover transition-all duration-300 transform hover:-translate-y-1 overflow-hidden flex flex-col h-full;
+    @apply bg-transparent rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden flex flex-col h-full;
   }
   
   /* Movie Poster Styles */
   .movie-poster {
-    @apply w-full h-64 object-cover bg-gray-200;
+    @apply w-full h-80 sm:h-64 object-cover object-center bg-gray-200;
   }
   
   .no-poster {
-    @apply w-full h-64 bg-gray-200 flex items-center justify-center text-gray-400 text-sm;
+    @apply w-full h-80 sm:h-64 bg-gray-200 flex items-center justify-center text-gray-400 text-sm;
   }
   
   /* Navigation Styles */
@@ -131,5 +131,18 @@
   
   .backdrop-blur-sm {
     backdrop-filter: blur(4px);
+  }
+  
+  /* Font stretch utilities */
+  .font-stretch-extra-expanded {
+    font-stretch: extra-expanded;
+  }
+  
+  .font-stretch-expanded {
+    font-stretch: expanded;
+  }
+  
+  .font-stretch-semi-expanded {
+    font-stretch: semi-expanded;
   }
 }

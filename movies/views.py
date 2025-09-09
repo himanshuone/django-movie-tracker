@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +14,16 @@ import requests
 from django.db.models import Count, Avg
 from collections import Counter
 from datetime import datetime
+
+
+def is_admin(user):
+    """Check if user is admin (staff or superuser)"""
+    return user.is_authenticated and (user.is_staff or user.is_superuser)
+
+
+def permission_denied_view(request):
+    """Show permission denied page with LinkedIn redirect"""
+    return render(request, 'permission_denied.html')
 
 
 def movie_list(request):
@@ -80,6 +92,7 @@ def movie_detail(request, movie_id):
     return render(request, 'movies/movie_detail.html', context)
 
 
+@user_passes_test(is_admin, login_url='/permission-denied/')
 def add_movie(request):
     """Add a new movie"""
     if request.method == 'POST':
@@ -108,6 +121,7 @@ def add_movie(request):
     return render(request, 'movies/add_movie.html', context)
 
 
+@user_passes_test(is_admin, login_url='/permission-denied/')
 def edit_movie(request, movie_id):
     """Edit an existing movie"""
     movie = get_object_or_404(Movie, id=movie_id)
@@ -125,6 +139,7 @@ def edit_movie(request, movie_id):
     return render(request, 'movies/edit_movie.html', context)
 
 
+@user_passes_test(is_admin, login_url='/permission-denied/')
 def upload_csv(request):
     """Upload movies from CSV file"""
     if request.method == 'POST':

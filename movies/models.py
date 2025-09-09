@@ -14,7 +14,8 @@ class Movie(models.Model):
                            help_text='Comma-separated tags or genres')
     watch_again = models.BooleanField(default=False, verbose_name='Would Watch Again', 
                                      help_text='Tick if this movie is worth watching again')
-    date_added = models.DateTimeField(auto_now_add=True, verbose_name='Date Added')
+    date_added = models.DateTimeField(auto_now_add=True)
+    tmdb_id = models.IntegerField(null=True, blank=True, help_text="The Movie Database ID")
     
     class Meta:
         ordering = ['-date_added']
@@ -24,11 +25,27 @@ class Movie(models.Model):
         return f"{self.name} ({self.year})"
     
     def get_poster(self):
-        """Return poster image if available, otherwise poster URL"""
+        """Return poster URL (uploaded image, manual URL, or TMDB API)"""
+        # First priority: uploaded image
         if self.poster_image:
             return self.poster_image.url
-        elif self.poster_url:
+        
+        # Second priority: manual poster URL
+        if self.poster_url:
             return self.poster_url
+        
+        # Third priority: fetch from TMDB API
+        try:
+            from .tmdb_service import tmdb_service
+            poster_url = tmdb_service.find_movie_poster(self.name, self.year)
+            if poster_url:
+                # Save the TMDB poster URL to avoid repeated API calls
+                self.poster_url = poster_url
+                self.save(update_fields=['poster_url'])
+                return poster_url
+        except Exception:
+            pass
+        
         return None
     
     def get_tags_list(self):

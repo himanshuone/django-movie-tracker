@@ -119,13 +119,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# TMDB API Configuration
+TMDB_API_KEY = '4bc440573400ae7a8f3fbad9c14af805'
+TMDB_READ_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YmM0NDA1NzM0MDBhZTdhOGYzZmJhZDljMTRhZjgwNSIsIm5iZiI6MTc1NzQ1MTYwMS43NzUsInN1YiI6IjY4YzA5NTUxZTI3NjExNjQ2NzliZDI4OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MNn2sA3YkQ41gCEJXno2i08tq5-WShB6Bl7UpIMWC5Q'
+TMDB_BASE_URL = 'https://api.themoviedb.org/3'
+TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500'  # w500 for 500px wide posters
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

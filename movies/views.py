@@ -180,7 +180,19 @@ def upload_csv(request):
                         if watch_again:
                             movie_data['watch_again'] = watch_again.lower() in ['yes', 'true', '1', 'y']
                         
-                        Movie.objects.create(**movie_data)
+                        # Create the movie
+                        movie = Movie.objects.create(**movie_data)
+                        
+                        # Try to fetch poster from TMDB if no poster provided
+                        if not poster_url:
+                            try:
+                                from .tmdb_service import tmdb_service
+                                tmdb_poster = tmdb_service.find_movie_poster(name, int(year))
+                                if tmdb_poster:
+                                    movie.poster_url = tmdb_poster
+                                    movie.save(update_fields=['poster_url'])
+                            except Exception:
+                                pass  # Silently fail if TMDB fetch fails
                         added_count += 1
                         
                     except Exception as e:

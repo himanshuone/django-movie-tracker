@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 from .models import Movie
@@ -11,6 +11,7 @@ import io
 import requests
 from django.db.models import Count, Avg
 from collections import Counter
+from datetime import datetime
 
 
 def movie_list(request):
@@ -254,3 +255,48 @@ def stats(request):
         'top_rated': top_rated,
     }
     return render(request, 'movies/stats.html', context)
+
+
+def export_backup(request):
+    """Export all movie data to CSV file"""
+    # Create the HttpResponse object with CSV header
+    response = HttpResponse(content_type='text/csv')
+    
+    # Generate filename with timestamp
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename = f'iseethrough_movies_backup_{timestamp}.csv'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    # Create CSV writer
+    writer = csv.writer(response)
+    
+    # Write CSV header
+    writer.writerow([
+        'Name',
+        'Year', 
+        'IMDb Link',
+        'Poster URL',
+        'Rating',
+        'Notes',
+        'Tags',
+        'Watch Again',
+        'Date Added'
+    ])
+    
+    # Get all movies and write data
+    movies = Movie.objects.all().order_by('-date_added')
+    
+    for movie in movies:
+        writer.writerow([
+            movie.name,
+            movie.year,
+            movie.imdb_link,
+            movie.poster_url or '',
+            movie.rating or '',
+            movie.notes or '',
+            movie.tags or '',
+            'Yes' if movie.watch_again else 'No',
+            movie.date_added.strftime('%Y-%m-%d %H:%M:%S')
+        ])
+    
+    return response

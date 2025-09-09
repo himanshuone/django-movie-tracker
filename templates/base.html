@@ -39,6 +39,9 @@
                 <a href="{% url 'stats' %}" class="{% if request.resolver_match.url_name == 'stats' %}text-orange-700{% else %}text-gray-700{% endif %} hover:text-orange-700 transition-colors">
                     Statistics
                 </a>
+                <a href="{% url 'export_backup' %}" class="text-gray-700 hover:text-orange-700 transition-colors">
+                    Backup
+                </a>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -63,6 +66,9 @@
                 </a>
                 <a href="{% url 'stats' %}" class="{% if request.resolver_match.url_name == 'stats' %}text-orange-700 bg-orange-50{% else %}text-gray-700{% endif %} hover:text-orange-700 hover:bg-gray-50 transition-colors px-3 py-2 rounded-lg">
                     Statistics
+                </a>
+                <a href="{% url 'export_backup' %}" class="text-gray-700 hover:text-orange-700 hover:bg-gray-50 transition-colors px-3 py-2 rounded-lg">
+                    Backup
                 </a>
             </div>
         </div>

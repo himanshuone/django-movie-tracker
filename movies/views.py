@@ -125,19 +125,25 @@ def upload_csv(request):
                 io_string = io.StringIO(decoded_file)
                 csv_reader = csv.DictReader(io_string)
                 
+                # Get the header row for debugging
+                fieldnames = csv_reader.fieldnames
+                print(f'CSV Headers found: {fieldnames}')
+                
                 added_count = 0
                 error_count = 0
                 errors = []
                 
                 for row_num, row in enumerate(csv_reader, start=2):
                     try:
-                        # Clean and validate data
-                        name = row.get('Name', '').strip()
-                        year = row.get('Year', '').strip()
-                        imdb_link = row.get('IMDb', '').strip()
-                        poster_url = row.get('Poster', '').strip()
-                        rating = row.get('Rating', '').strip()
-                        notes = row.get('Notes', '').strip()
+                        # Clean and validate data - handle different column name variations
+                        name = (row.get('Name') or row.get('name') or row.get('Movie Name') or row.get('Title') or '').strip()
+                        year = (row.get('Year') or row.get('year') or row.get('Release Year') or '').strip()
+                        imdb_link = (row.get('IMDb') or row.get('imdb') or row.get('IMDb Link') or row.get('imdb_link') or '').strip()
+                        poster_url = (row.get('Poster') or row.get('poster') or row.get('Poster URL') or row.get('poster_url') or '').strip()
+                        rating = (row.get('Rating') or row.get('rating') or row.get('My Rating') or '').strip()
+                        notes = (row.get('Notes') or row.get('notes') or row.get('Comments') or '').strip()
+                        tags = (row.get('Tags') or row.get('tags') or row.get('Genres') or row.get('Genre') or '').strip()
+                        watch_again = (row.get('Watch Again') or row.get('watch_again') or row.get('Worth Watching Again') or '').strip()
                         
                         if not name or not year or not imdb_link:
                             errors.append(f'Row {row_num}: Missing required fields (Name, Year, or IMDb)')
@@ -166,6 +172,13 @@ def upload_csv(request):
                                 movie_data['rating'] = float(rating)
                             except ValueError:
                                 pass
+                        
+                        if tags:
+                            movie_data['tags'] = tags
+                        
+                        # Handle watch_again field
+                        if watch_again:
+                            movie_data['watch_again'] = watch_again.lower() in ['yes', 'true', '1', 'y']
                         
                         Movie.objects.create(**movie_data)
                         added_count += 1

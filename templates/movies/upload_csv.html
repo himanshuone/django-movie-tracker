@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Upload CSV - Movie Tracker{% endblock %}
+{% block title %}Upload CSV - iseethrough{% endblock %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto">
@@ -14,14 +14,15 @@
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
         <h3 class="text-lg font-semibold text-blue-900 mb-4">📋 CSV Format Guide</h3>
         <div class="space-y-3">
-            <p class="text-blue-800"><strong>Required columns:</strong></p>
+            <p class="text-blue-800"><strong>Accepted column names (case-insensitive):</strong></p>
             <code class="block bg-blue-100 p-3 rounded text-sm text-blue-900">
-                name,year,imdb_link,poster_url,rating,notes,tags,watch_again
+                Name, Year, IMDb Link, Poster URL, Rating, Notes, Tags, Watch Again
             </code>
             <div class="text-blue-700 text-sm space-y-1">
-                <p><strong>watch_again:</strong> Use TRUE or FALSE</p>
-                <p><strong>tags:</strong> Comma-separated genres (Drama, Romance, Action)</p>
-                <p><strong>rating:</strong> Number between 0-10</p>
+                <p><strong>Alternative names:</strong> name/title, year, imdb/imdb_link, poster/poster_url, rating, notes/comments, tags/genres, watch_again</p>
+                <p><strong>watch_again:</strong> Use Yes/No or True/False</p>
+                <p><strong>tags:</strong> Comma-separated genres ("Drama, Romance, Action")</p>
+                <p><strong>Required:</strong> Name, Year, IMDb Link are mandatory</p>
             </div>
         </div>
     </div>

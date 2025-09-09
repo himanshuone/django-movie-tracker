@@ -3,124 +3,125 @@
 {% block title %}Add Movie - iseethrough{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto">
+<div class="max-w-6xl mx-auto">
     <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Add New Movie</h1>
-        <p class="text-gray-600">Add a movie to your personal collection</p>
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-1">Add New Movie</h1>
     </div>
 
     <!-- Form -->
-    <div class="bg-white rounded-lg shadow-lg p-8">
-        <form method="post" enctype="multipart/form-data" class="space-y-6">
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
             
-            <!-- Movie Name -->
-            <div>
-                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Movie Name *
-                </label>
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.name.errors }}</div>
-                {% endif %}
-            </div>
+            <!-- Grid Layout for Compact Form -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Left Column -->
+                <div class="space-y-4">
+                    <!-- Movie Name -->
+                    <div>
+                        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Movie Name *
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
 
-            <!-- Year -->
-            <div>
-                <label for="{{ form.year.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Release Year *
-                </label>
-                {{ form.year }}
-                {% if form.year.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.year.errors }}</div>
-                {% endif %}
-            </div>
+                    <!-- Year and Rating -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="{{ form.year.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                Year *
+                            </label>
+                            {{ form.year }}
+                            {% if form.year.errors %}
+                                <div class="text-red-600 text-sm mt-1">{{ form.year.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <label for="{{ form.rating.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                Rating (0-10)
+                            </label>
+                            {{ form.rating }}
+                            {% if form.rating.errors %}
+                                <div class="text-red-600 text-sm mt-1">{{ form.rating.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
 
-            <!-- IMDb Link -->
-            <div>
-                <label for="{{ form.imdb_link.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    IMDb Link *
-                </label>
-                {{ form.imdb_link }}
-                {% if form.imdb_link.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.imdb_link.errors }}</div>
-                {% endif %}
-            </div>
+                    <!-- IMDb Link -->
+                    <div>
+                        <label for="{{ form.imdb_link.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            IMDb Link *
+                        </label>
+                        {{ form.imdb_link }}
+                        {% if form.imdb_link.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.imdb_link.errors }}</div>
+                        {% endif %}
+                    </div>
 
-            <!-- Poster Options -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Poster URL -->
-                <div>
-                    <label for="{{ form.poster_url.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                        Poster URL
-                    </label>
-                    {{ form.poster_url }}
-                    {% if form.poster_url.errors %}
-                        <div class="text-red-600 text-sm mt-1">{{ form.poster_url.errors }}</div>
-                    {% endif %}
+                    <!-- Watch Again Checkbox -->
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center">
+                            {{ form.watch_again }}
+                            <label for="{{ form.watch_again.id_for_label }}" class="ml-2 text-sm font-medium text-gray-800">
+                                Worth Watching Again
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Poster Upload -->
-                <div>
-                    <label for="{{ form.poster_image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                        Or Upload Poster
-                    </label>
-                    {{ form.poster_image }}
-                    {% if form.poster_image.errors %}
-                        <div class="text-red-600 text-sm mt-1">{{ form.poster_image.errors }}</div>
-                    {% endif %}
+                <!-- Right Column -->
+                <div class="space-y-4">
+                    <!-- Poster Options -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="{{ form.poster_url.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                Poster URL
+                            </label>
+                            {{ form.poster_url }}
+                            {% if form.poster_url.errors %}
+                                <div class="text-red-600 text-sm mt-1">{{ form.poster_url.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label for="{{ form.poster_image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                Or Upload Poster
+                            </label>
+                            {{ form.poster_image }}
+                            {% if form.poster_image.errors %}
+                                <div class="text-red-600 text-sm mt-1">{{ form.poster_image.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Tags/Genres -->
+                    <div>
+                        <label for="{{ form.tags.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Tags/Genres
+                        </label>
+                        {{ form.tags }}
+                        <div class="text-xs text-gray-500 mt-1">Separate with commas</div>
+                        {% if form.tags.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.tags.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Notes -->
+                    <div>
+                        <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                            Notes
+                        </label>
+                        {{ form.notes }}
+                        {% if form.notes.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.notes.errors }}</div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-
-            <!-- Rating -->
-            <div>
-                <label for="{{ form.rating.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    My Rating (0-10)
-                </label>
-                {{ form.rating }}
-                {% if form.rating.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.rating.errors }}</div>
-                {% endif %}
-            </div>
-
-            <!-- Watch Again Checkbox -->
-            <div class="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div class="flex items-center">
-                    {{ form.watch_again }}
-                    <label for="{{ form.watch_again.id_for_label }}" class="ml-2 text-sm font-medium text-gray-800">
-                        Would Watch Again
-                    </label>
-                </div>
-                <div class="text-sm text-gray-600">
-                    ✓ Tick if this movie is worth watching again
-                </div>
-            </div>
-            {% if form.watch_again.errors %}
-                <div class="text-red-600 text-sm">{{ form.watch_again.errors }}</div>
-            {% endif %}
-
-            <!-- Tags/Genres -->
-            <div>
-                <label for="{{ form.tags.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Tags/Genres
-                </label>
-                {{ form.tags }}
-                <div class="text-sm text-gray-500 mt-1">Separate multiple genres with commas</div>
-                {% if form.tags.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.tags.errors }}</div>
-                {% endif %}
-            </div>
-
-            <!-- Notes -->
-            <div>
-                <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Notes
-                </label>
-                {{ form.notes }}
-                {% if form.notes.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.notes.errors }}</div>
-                {% endif %}
             </div>
 
             <!-- Form Errors -->

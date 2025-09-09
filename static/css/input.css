@@ -14,7 +14,7 @@
 @layer components {
   /* Movie Card Component */
   .movie-card {
-    @apply bg-white rounded-lg shadow-movie-card hover:shadow-movie-card-hover transition-all duration-300 transform hover:-translate-y-1 overflow-hidden;
+    @apply bg-white rounded-lg shadow-movie-card hover:shadow-movie-card-hover transition-all duration-300 transform hover:-translate-y-1 overflow-hidden flex flex-col h-full;
   }
   
   /* Movie Poster Styles */

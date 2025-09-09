@@ -198,17 +198,45 @@ def stats(request):
     """Display movie statistics"""
     total_movies = Movie.objects.count()
     
-    # Movies by year
-    movies_by_year = Movie.objects.values('year').annotate(
+    if total_movies == 0:
+        context = {
+            'total_movies': 0,
+            'movies_by_year': [],
+            'tag_counts': [],
+            'avg_rating': None,
+            'top_rated': [],
+        }
+        return render(request, 'movies/stats.html', context)
+    
+    # Movies by year with percentages
+    movies_by_year_raw = Movie.objects.values('year').annotate(
         count=Count('id')
     ).order_by('-year')[:10]  # Top 10 years
+    
+    movies_by_year = []
+    for item in movies_by_year_raw:
+        percentage = round((item['count'] * 100) / total_movies)
+        movies_by_year.append({
+            'year': item['year'],
+            'count': item['count'],
+            'percentage': percentage
+        })
     
     # Get all tags and count them
     all_tags = []
     for movie in Movie.objects.exclude(tags__isnull=True).exclude(tags=''):
         all_tags.extend(movie.get_tags_list())
     
-    tag_counts = Counter(all_tags).most_common(10)  # Top 10 tags
+    tag_counts_raw = Counter(all_tags).most_common(10)  # Top 10 tags
+    
+    tag_counts = []
+    for tag, count in tag_counts_raw:
+        percentage = round((count * 100) / total_movies)
+        tag_counts.append({
+            'tag': tag,
+            'count': count,
+            'percentage': percentage
+        })
     
     # Average rating
     avg_rating = Movie.objects.exclude(rating__isnull=True).aggregate(

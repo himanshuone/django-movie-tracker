@@ -1,0 +1,23 @@
+{
+  "name": "movie-tracker",
+  "version": "1.0.0",
+  "description": "A Django movie tracker application with Tailwind CSS",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch",
+    "build-css-prod": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify",
+    "dev": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch"
+  },
+  "keywords": [
+    "django",
+    "tailwindcss",
+    "movie-tracker",
+    "python",
+    "web-app"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

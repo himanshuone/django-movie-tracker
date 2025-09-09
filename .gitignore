@@ -1,0 +1,66 @@
+# Django
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+.Python
+db.sqlite3
+db.sqlite3-journal
+
+# Django migrations
+**/migrations/*.py
+**/migrations/*.pyc
+!**/migrations/__init__.py
+
+# Static files (if collected)
+/staticfiles/
+/static/admin/
+/static/rest_framework/
+
+# Media files
+/media/
+
+# Environment variables
+.env
+.venv
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node modules (for Tailwind)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Tailwind CSS output (will be regenerated)
+/static/css/output.css
+
+# Python
+*.egg-info/
+.coverage
+.pytest_cache/
+.tox/
+
+# Logs
+*.log
+
+# Local settings
+local_settings.py

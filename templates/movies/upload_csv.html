@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Upload CSV - Movie Tracker{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Upload Movie CSV</h1>
+        <p class="text-gray-600">Bulk import movies from a CSV file</p>
+    </div>
+
+    <!-- CSV Format Guide -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+        <h3 class="text-lg font-semibold text-blue-900 mb-4">📋 CSV Format Guide</h3>
+        <div class="space-y-3">
+            <p class="text-blue-800"><strong>Required columns:</strong></p>
+            <code class="block bg-blue-100 p-3 rounded text-sm text-blue-900">
+                name,year,imdb_link,poster_url,rating,notes,tags,watch_again
+            </code>
+            <div class="text-blue-700 text-sm space-y-1">
+                <p><strong>watch_again:</strong> Use TRUE or FALSE</p>
+                <p><strong>tags:</strong> Comma-separated genres (Drama, Romance, Action)</p>
+                <p><strong>rating:</strong> Number between 0-10</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- File Upload -->
+            <div>
+                <label for="{{ form.csv_file.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    Choose CSV File
+                </label>
+                
+                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-gray-400 transition-colors">
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="flex text-sm text-gray-600">
+                            <label for="{{ form.csv_file.id_for_label }}" class="relative cursor-pointer bg-white rounded-md font-medium text-teal-600 hover:text-teal-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-teal-500">
+                                <span>Upload a file</span>
+                                {{ form.csv_file }}
+                            </label>
+                            <p class="pl-1">or drag and drop</p>
+                        </div>
+                        <p class="text-xs text-gray-500">CSV files up to 5MB</p>
+                    </div>
+                </div>
+                
+                {% if form.csv_file.errors %}
+                    <div class="text-red-600 text-sm mt-1">{{ form.csv_file.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Sample CSV Download -->
+            <div class="bg-gray-50 rounded-lg p-4">
+                <h4 class="text-sm font-medium text-gray-900 mb-2">Need a sample?</h4>
+                <p class="text-sm text-gray-600 mb-3">Download our sample CSV template to get started:</p>
+                <a href="#" class="inline-flex items-center text-sm text-teal-600 hover:text-teal-500">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Download Sample CSV
+                </a>
+            </div>
+
+            <!-- Form Errors -->
+            {% if form.non_field_errors %}
+                <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 pt-6">
+                <button type="submit" class="btn-primary flex-1">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                    Upload & Import Movies
+                </button>
+                <a href="{% url 'movie_list' %}" class="btn-secondary text-center flex-1">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Recent Imports -->
+    <div class="mt-8 bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">💡 Tips for CSV Upload</h3>
+        <div class="space-y-2 text-sm text-gray-600">
+            <p>• Make sure your CSV has all required columns (name, year, imdb_link)</p>
+            <p>• Use TRUE/FALSE for the watch_again column (✓ indicator)</p>
+            <p>• Separate multiple genres with commas: "Drama, Romance, Comedy"</p>
+            <p>• Rating should be between 0-10 (decimals allowed: 8.5)</p>
+            <p>• Empty fields are okay for optional columns</p>
+        </div>
+    </div>
+</div>
+
+<style>
+/* File input styling */
+input[type="file"] {
+    @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer;
+}
+</style>
+{% endblock %}

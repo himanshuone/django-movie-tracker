@@ -1,0 +1,228 @@
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.db.models import Q
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
+from .models import Movie
+from .forms import MovieForm, CSVUploadForm
+import csv
+import io
+import requests
+from django.db.models import Count, Avg
+from collections import Counter
+
+
+def movie_list(request):
+    """Display list of movies with search and filter functionality"""
+    movies = Movie.objects.all()
+    
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        movies = movies.filter(
+            Q(name__icontains=search_query) |
+            Q(tags__icontains=search_query)
+        )
+    
+    # Filter by year
+    year_filter = request.GET.get('year', '')
+    if year_filter:
+        movies = movies.filter(year=year_filter)
+    
+    # Filter by tags
+    tag_filter = request.GET.get('tag', '')
+    if tag_filter:
+        movies = movies.filter(tags__icontains=tag_filter)
+    
+    # Sorting
+    sort_by = request.GET.get('sort', 'date_added')
+    if sort_by == 'name':
+        movies = movies.order_by('name')
+    elif sort_by == 'year':
+        movies = movies.order_by('-year')
+    elif sort_by == 'rating':
+        movies = movies.order_by('-rating')
+    else:  # default: date_added
+        movies = movies.order_by('-date_added')
+    
+    # Pagination
+    paginator = Paginator(movies, 12)  # Show 12 movies per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Get unique years and tags for filters
+    years = Movie.objects.values_list('year', flat=True).distinct().order_by('-year')
+    all_tags = []
+    for movie in Movie.objects.exclude(tags__isnull=True).exclude(tags=''):
+        all_tags.extend(movie.get_tags_list())
+    unique_tags = sorted(list(set(all_tags)))
+    
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'year_filter': year_filter,
+        'tag_filter': tag_filter,
+        'sort_by': sort_by,
+        'years': years,
+        'tags': unique_tags,
+        'total_movies': Movie.objects.count(),
+        'watch_again_count': Movie.objects.filter(watch_again=True).count(),
+    }
+    return render(request, 'movies/movie_list.html', context)
+
+
+def movie_detail(request, movie_id):
+    """Display movie detail page"""
+    movie = get_object_or_404(Movie, id=movie_id)
+    context = {'movie': movie}
+    return render(request, 'movies/movie_detail.html', context)
+
+
+def add_movie(request):
+    """Add a new movie"""
+    if request.method == 'POST':
+        form = MovieForm(request.POST, request.FILES)
+        if form.is_valid():
+            movie = form.save()
+            messages.success(request, f'Movie "{movie.name}" added successfully!')
+            return redirect('movie_list')
+    else:
+        form = MovieForm()
+    
+    context = {'form': form}
+    return render(request, 'movies/add_movie.html', context)
+
+
+def edit_movie(request, movie_id):
+    """Edit an existing movie"""
+    movie = get_object_or_404(Movie, id=movie_id)
+    
+    if request.method == 'POST':
+        form = MovieForm(request.POST, request.FILES, instance=movie)
+        if form.is_valid():
+            movie = form.save()
+            messages.success(request, f'Movie "{movie.name}" updated successfully!')
+            return redirect('movie_list')
+    else:
+        form = MovieForm(instance=movie)
+    
+    context = {'form': form, 'movie': movie}
+    return render(request, 'movies/edit_movie.html', context)
+
+
+def upload_csv(request):
+    """Upload movies from CSV file"""
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = request.FILES['csv_file']
+            
+            try:
+                # Read CSV file
+                decoded_file = csv_file.read().decode('utf-8')
+                io_string = io.StringIO(decoded_file)
+                csv_reader = csv.DictReader(io_string)
+                
+                added_count = 0
+                error_count = 0
+                errors = []
+                
+                for row_num, row in enumerate(csv_reader, start=2):
+                    try:
+                        # Clean and validate data
+                        name = row.get('Name', '').strip()
+                        year = row.get('Year', '').strip()
+                        imdb_link = row.get('IMDb', '').strip()
+                        poster_url = row.get('Poster', '').strip()
+                        rating = row.get('Rating', '').strip()
+                        notes = row.get('Notes', '').strip()
+                        
+                        if not name or not year or not imdb_link:
+                            errors.append(f'Row {row_num}: Missing required fields (Name, Year, or IMDb)')
+                            error_count += 1
+                            continue
+                        
+                        # Check if movie already exists
+                        if Movie.objects.filter(name=name, year=int(year)).exists():
+                            errors.append(f'Row {row_num}: Movie "{name} ({year})" already exists')
+                            error_count += 1
+                            continue
+                        
+                        # Create movie
+                        movie_data = {
+                            'name': name,
+                            'year': int(year),
+                            'imdb_link': imdb_link,
+                            'notes': notes if notes else None,
+                        }
+                        
+                        if poster_url:
+                            movie_data['poster_url'] = poster_url
+                        
+                        if rating:
+                            try:
+                                movie_data['rating'] = float(rating)
+                            except ValueError:
+                                pass
+                        
+                        Movie.objects.create(**movie_data)
+                        added_count += 1
+                        
+                    except Exception as e:
+                        errors.append(f'Row {row_num}: {str(e)}')
+                        error_count += 1
+                
+                # Show results
+                if added_count > 0:
+                    messages.success(request, f'Successfully added {added_count} movies!')
+                
+                if error_count > 0:
+                    error_msg = f'{error_count} errors occurred:\n' + '\n'.join(errors[:5])
+                    if len(errors) > 5:
+                        error_msg += f'\n... and {len(errors) - 5} more errors'
+                    messages.warning(request, error_msg)
+                
+                return redirect('movie_list')
+                
+            except Exception as e:
+                messages.error(request, f'Error processing CSV file: {str(e)}')
+    else:
+        form = CSVUploadForm()
+    
+    context = {'form': form}
+    return render(request, 'movies/upload_csv.html', context)
+
+
+def stats(request):
+    """Display movie statistics"""
+    total_movies = Movie.objects.count()
+    
+    # Movies by year
+    movies_by_year = Movie.objects.values('year').annotate(
+        count=Count('id')
+    ).order_by('-year')[:10]  # Top 10 years
+    
+    # Get all tags and count them
+    all_tags = []
+    for movie in Movie.objects.exclude(tags__isnull=True).exclude(tags=''):
+        all_tags.extend(movie.get_tags_list())
+    
+    tag_counts = Counter(all_tags).most_common(10)  # Top 10 tags
+    
+    # Average rating
+    avg_rating = Movie.objects.exclude(rating__isnull=True).aggregate(
+        avg_rating=Avg('rating')
+    )['avg_rating']
+    
+    # Highest rated movies
+    top_rated = Movie.objects.exclude(rating__isnull=True).order_by('-rating')[:5]
+    
+    context = {
+        'total_movies': total_movies,
+        'movies_by_year': movies_by_year,
+        'tag_counts': tag_counts,
+        'avg_rating': round(avg_rating, 1) if avg_rating else None,
+        'top_rated': top_rated,
+    }
+    return render(request, 'movies/stats.html', context)

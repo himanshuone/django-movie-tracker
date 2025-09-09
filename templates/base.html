@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Movie Tracker{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-300 w-screen h-screen p-6 font-sans">
+    <div class="bg-gray-100 w-full h-full rounded-3xl shadow-md p-4 max-w-8xl mx-auto flex flex-col">
+        <!-- Navigation -->
+        <div class="flex items-center justify-between p-3 text-gray-700">
+        <div class="text-xl font-semibold ml-10">
+            <a href="{% url 'movie_list' %}" class="flex items-center space-x-2">
+                <span>🎬</span>
+                <span>Movie Tracker</span>
+            </a>
+        </div>
+        <div class="space-x-6 mr-10">
+            <span class="mr-10">
+                <a href="{% url 'movie_list' %}" class="{% if request.resolver_match.url_name == 'movie_list' %}text-orange-700{% else %}text-gray-700{% endif %} hover:text-orange-700 transition-colors">
+                    All Movies
+                </a>
+            </span>
+            <span class="mr-10">
+                <a href="{% url 'add_movie' %}" class="{% if request.resolver_match.url_name == 'add_movie' %}text-orange-700{% else %}text-gray-700{% endif %} hover:text-orange-700 transition-colors">
+                    Add Movie
+                </a>
+            </span>
+            <span class="mr-10">
+                <a href="{% url 'upload_csv' %}" class="{% if request.resolver_match.url_name == 'upload_csv' %}text-orange-700{% else %}text-gray-700{% endif %} hover:text-orange-700 transition-colors">
+                    Upload CSV
+                </a>
+            </span>
+            <span>
+                <a href="{% url 'stats' %}" class="text-gray-700 hover:text-orange-700 transition-colors">
+                    Statistics
+                </a>
+            </span>
+        </div>
+    </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8 overflow-y-auto">
+            <!-- Messages -->
+            {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags|default:'info' }} flex items-center justify-between">
+                            <span>{{ message }}</span>
+                            <button type="button" class="text-gray-500 hover:text-gray-700" onclick="this.parentElement.remove()">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Page Content -->
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-gray-200 py-4 mt-auto">
+            <div class="text-center">
+                <p class="text-gray-600">&copy; 2024 Movie Tracker. Built with Django & Tailwind CSS.</p>
+                <p class="text-sm text-gray-400 mt-1">Clean design with orange accents in navigation</p>
+            </div>
+        </footer>
+    </div>
+    
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

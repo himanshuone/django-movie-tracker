@@ -89,11 +89,11 @@
         {% endif %}
         
         <!-- Poster -->
-        <div class="relative h-80">
+        <div class="relative aspect-[2/3]">
             {% if movie.get_poster %}
-                <img src="{{ movie.get_poster }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="{{ movie.name }}" 
+                <img src="{{ movie.get_poster }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="{{ movie.name }}" 
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm" style="display: none;">
+                <div class="absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm" style="display: none;">
                     <div class="text-center">
                         <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
@@ -102,7 +102,7 @@
                     </div>
                 </div>
             {% else %}
-                <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm">
+                <div class="absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-sm">
                     <div class="text-center">
                         <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>

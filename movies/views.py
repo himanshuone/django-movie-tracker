@@ -139,6 +139,25 @@ def edit_movie(request, movie_id):
     return render(request, 'movies/edit_movie.html', context)
 
 
+def delete_movie(request, movie_id):
+    """Delete an existing movie"""
+    movie = get_object_or_404(Movie, id=movie_id)
+    print(f"DEBUG: Delete request - Method: {request.method}, User: {request.user}, Movie: {movie.name}")
+    
+    if request.method == 'POST':
+        movie_name = movie.name
+        print(f"DEBUG: Deleting movie: {movie_name}")
+        movie.delete()
+        print(f"DEBUG: Movie deleted successfully: {movie_name}")
+        messages.success(request, f'Movie "{movie_name}" has been deleted successfully!')
+        return redirect('movie_list')
+    
+    # If GET request, redirect back to edit page
+    print(f"DEBUG: Invalid request method: {request.method}")
+    messages.error(request, 'Invalid request method for movie deletion.')
+    return redirect('edit_movie', movie_id=movie_id)
+
+
 @user_passes_test(is_admin, login_url='/permission-denied/')
 def upload_csv(request):
     """Upload movies from CSV file"""

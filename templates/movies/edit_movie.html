@@ -3,7 +3,7 @@
 {% block title %}Edit Movie - iseethrough{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto">
+<div class="max-w-4xl mx-auto px-4">
     <!-- Header -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-900 mb-2">Edit Movie</h1>
@@ -11,30 +11,44 @@
     </div>
 
     <!-- Form -->
-    <div class="bg-white rounded-lg shadow-lg p-8">
+    <div class="bg-white rounded-lg shadow-lg p-6 sm:p-8">
         <form method="post" enctype="multipart/form-data" class="space-y-6">
             {% csrf_token %}
             
-            <!-- Movie Name -->
-            <div>
-                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Movie Name *
-                </label>
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.name.errors }}</div>
-                {% endif %}
-            </div>
+            <!-- Basic Info Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Movie Name -->
+                <div class="lg:col-span-2">
+                    <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Movie Name *
+                    </label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.name.errors }}</div>
+                    {% endif %}
+                </div>
 
-            <!-- Year -->
-            <div>
-                <label for="{{ form.year.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Release Year *
-                </label>
-                {{ form.year }}
-                {% if form.year.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.year.errors }}</div>
-                {% endif %}
+                <!-- Year -->
+                <div>
+                    <label for="{{ form.year.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Release Year *
+                    </label>
+                    {{ form.year }}
+                    {% if form.year.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.year.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Rating -->
+                <div>
+                    <label for="{{ form.rating.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        My Rating (0-10)
+                    </label>
+                    {{ form.rating }}
+                    {% if form.rating.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.rating.errors }}</div>
+                    {% endif %}
+                </div>
             </div>
 
             <!-- IMDb Link -->
@@ -48,76 +62,74 @@
                 {% endif %}
             </div>
 
-            <!-- Poster Options -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Poster URL -->
+            <!-- Poster Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Current Poster Preview -->
+                {% if movie.get_poster %}
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="text-sm font-medium text-gray-900 mb-2">Current Poster:</h4>
+                    <img src="{{ movie.get_poster }}" alt="{{ movie.name }}" class="w-full h-48 object-cover rounded-lg">
+                </div>
+                {% endif %}
+                
+                <!-- Poster Options -->
+                <div class="lg:col-span-2 space-y-4">
+                    <!-- Poster URL -->
+                    <div>
+                        <label for="{{ form.poster_url.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Poster URL
+                        </label>
+                        {{ form.poster_url }}
+                        {% if form.poster_url.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.poster_url.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Poster Upload -->
+                    <div>
+                        <label for="{{ form.poster_image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            Or Upload New Poster
+                        </label>
+                        {{ form.poster_image }}
+                        {% if form.poster_image.errors %}
+                            <div class="text-red-600 text-sm mt-1">{{ form.poster_image.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Additional Info Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Tags/Genres -->
                 <div>
-                    <label for="{{ form.poster_url.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                        Poster URL
+                    <label for="{{ form.tags.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Tags/Genres
                     </label>
-                    {{ form.poster_url }}
-                    {% if form.poster_url.errors %}
-                        <div class="text-red-600 text-sm mt-1">{{ form.poster_url.errors }}</div>
+                    {{ form.tags }}
+                    <div class="text-sm text-gray-500 mt-1">Separate multiple genres with commas</div>
+                    {% if form.tags.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.tags.errors }}</div>
                     {% endif %}
                 </div>
-
-                <!-- Poster Upload -->
-                <div>
-                    <label for="{{ form.poster_image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                        Or Upload New Poster
-                    </label>
-                    {{ form.poster_image }}
-                    {% if form.poster_image.errors %}
-                        <div class="text-red-600 text-sm mt-1">{{ form.poster_image.errors }}</div>
+                
+                <!-- Watch Again Checkbox -->
+                <div class="flex items-center justify-center">
+                    <div class="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200 w-full">
+                        <div class="flex items-center">
+                            {{ form.watch_again }}
+                            <label for="{{ form.watch_again.id_for_label }}" class="ml-2 text-sm font-medium text-gray-800">
+                                Would Watch Again
+                            </label>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            ✓ Tick if this movie is worth watching again
+                        </div>
+                    </div>
+                    {% if form.watch_again.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.watch_again.errors }}</div>
                     {% endif %}
                 </div>
-            </div>
-
-            <!-- Current Poster Preview -->
-            {% if movie.get_poster %}
-            <div class="bg-gray-50 rounded-lg p-4">
-                <h4 class="text-sm font-medium text-gray-900 mb-2">Current Poster:</h4>
-                <img src="{{ movie.get_poster }}" alt="{{ movie.name }}" class="w-32 h-48 object-cover rounded-lg">
-            </div>
-            {% endif %}
-
-            <!-- Rating -->
-            <div>
-                <label for="{{ form.rating.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    My Rating (0-10)
-                </label>
-                {{ form.rating }}
-                {% if form.rating.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.rating.errors }}</div>
-                {% endif %}
-            </div>
-
-            <!-- Watch Again Checkbox -->
-            <div class="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div class="flex items-center">
-                    {{ form.watch_again }}
-                    <label for="{{ form.watch_again.id_for_label }}" class="ml-2 text-sm font-medium text-gray-800">
-                        Would Watch Again
-                    </label>
-                </div>
-                <div class="text-sm text-gray-600">
-                    ✓ Tick if this movie is worth watching again
-                </div>
-            </div>
-            {% if form.watch_again.errors %}
-                <div class="text-red-600 text-sm">{{ form.watch_again.errors }}</div>
-            {% endif %}
-
-            <!-- Tags/Genres -->
-            <div>
-                <label for="{{ form.tags.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
-                    Tags/Genres
-                </label>
-                {{ form.tags }}
-                <div class="text-sm text-gray-500 mt-1">Separate multiple genres with commas</div>
-                {% if form.tags.errors %}
-                    <div class="text-red-600 text-sm mt-1">{{ form.tags.errors }}</div>
-                {% endif %}
             </div>
 
             <!-- Notes -->
@@ -149,7 +161,19 @@
                 <a href="{% url 'movie_list' %}" class="btn-secondary text-center flex-1">
                     Cancel
                 </a>
+                <button type="button" onclick="confirmDelete('{{ movie.name }}', '{{ movie.id }}')" style="background-color: #dc2626; color: white; padding: 8px 16px; border-radius: 8px; border: none; font-weight: 500; cursor: pointer; flex: 1;" onmouseover="this.style.backgroundColor='#b91c1c'" onmouseout="this.style.backgroundColor='#dc2626'">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                    Delete Movie
+                </button>
             </div>
+
+        </form>
+        
+        <!-- Hidden Delete Form (outside main form) -->
+        <form id="deleteForm" method="post" action="{% url 'delete_movie' movie.id %}" style="display: none;">
+            {% csrf_token %}
         </form>
     </div>
 </div>
@@ -168,4 +192,24 @@ textarea.form-control {
     @apply resize-y;
 }
 </style>
+
+<script>
+function confirmDelete(movieName, movieId) {
+    if (confirm(`Are you sure you want to delete "${movieName}"?\n\nThis action cannot be undone!`)) {
+        const deleteForm = document.getElementById('deleteForm');
+        if (deleteForm) {
+            deleteForm.submit();
+        } else {
+            console.error('Delete form not found!');
+            alert('Error: Delete form not found. Please refresh the page and try again.');
+        }
+    }
+}
+</script>
+            console.error('Delete form not found!');
+            alert('Error: Delete form not found. Please refresh the page and try again.');
+        }
+    }
+}
+</script>
 {% endblock %}

@@ -48,16 +48,16 @@ def movie_list(request):
     if tag_filter:
         movies = movies.filter(tags__icontains=tag_filter)
     
-    # Sorting
-    sort_by = request.GET.get('sort', 'date_added')
+    # Sorting (default: watch_again first)
+    sort_by = request.GET.get('sort', 'watch_again')
     if sort_by == 'name':
         movies = movies.order_by('name')
     elif sort_by == 'year':
         movies = movies.order_by('-year')
     elif sort_by == 'rating':
         movies = movies.order_by('-rating')
-    else:  # default: date_added
-        movies = movies.order_by('-date_added')
+    else:  # default and explicit: watch_again first
+        movies = movies.order_by('-watch_again', '-date_added')  # Watch Again first, then newest
     
     # Pagination
     paginator = Paginator(movies, 12)  # Show 12 movies per page

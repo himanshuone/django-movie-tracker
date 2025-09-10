@@ -6,9 +6,9 @@
 
 <!-- Search and Filter Form -->
 <div class="search-form w-full overflow-hidden mb-6">
-    <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4 w-full" id="filterForm">
+    <form method="get" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full" id="filterForm">
         <!-- Search Input -->
-        <div class="md:col-span-2">
+        <div class="sm:col-span-2 lg:col-span-1">
             <div class="relative">
                 <input type="text" name="search" class="form-input pl-10" placeholder="Search movies..." 
                        value="{{ search_query }}" onchange="autoSubmit()">
@@ -39,6 +39,17 @@
                         {{ tag }}
                     </option>
                 {% endfor %}
+            </select>
+        </div>
+        
+        <!-- Sort Filter -->
+        <div>
+            <select name="sort" class="form-select" onchange="autoSubmit()">
+                <option value="watch_again" {% if sort_by == 'watch_again' %}selected{% endif %}>⭐ Watch Again First</option>
+                <option value="date_added" {% if sort_by == 'date_added' %}selected{% endif %}>Newest First</option>
+                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name A-Z</option>
+                <option value="year" {% if sort_by == 'year' %}selected{% endif %}>Year (Newest)</option>
+                <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>Highest Rated</option>
             </select>
         </div>
     </form>
